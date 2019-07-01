@@ -1,5 +1,6 @@
 const tf = require('@tensorflow/tfjs');
 
+//___________________________Introduction to Tensor________________________________________________________________
 function basics() {
     //Tensor refers to type of matrices dimensions (Ex: Scalar 2, Vector [2,3,4], Matrix [1 2] [2,4])
     tf.tensor([1,2,3,4]);
@@ -74,6 +75,7 @@ function tensorMemory(){
 //tensorMultiplication();
 //tensorMemory();
 
+//_______________________________________Creating Actual Neural Network w/ Layer API___________________________________________________________
 function createNeuralNetwork(){
     const neuralNetwork = tf.sequential(); //Creates overall neural network architecture
 
@@ -85,22 +87,68 @@ function createNeuralNetwork(){
     }
 
     const configOutputLayer = { //Configuration for layers
-        units: 4, //# of nodes
+        units: 1, //# of nodes
         activation: 'sigmoid', //Type of activation function (Controls number range)
     }
+    //Dense = fully connected layer
     const hidden = tf.layers.dense(configHiddenLayer); //Creating a layer that connects all nodes to each other
     const output = tf.layers.dense(configOutputLayer);
 
     neuralNetwork.add(hidden); //Adding hidden layer to network
     neuralNetwork.add(output);
 
-    //Optimizer
-    const sgdOpt = tf.train.sgd(0.1);
+    //Optimizer using gradient descent
+    const sgdOpt = tf.train.sgd(0.5); //.1 = Learning curve, the higher the number
     const configOptimizer = {
         optimizer: sgdOpt,
-        loss: tf.losses.meanSquaredError,
+        loss: tf.losses.meanSquaredError, 
     }
     neuralNetwork.compile(configOptimizer);
+    
+    //Creating a history
+    const x = tf.tensor2d(
+        [
+            [0,0], //Input cases
+            [1,0],
+            [0,1],
+            [1,1],
+        ]
+    );
+
+    const y = tf.tensor2d( //Expected Values
+        [
+            [0],
+            [1],
+            [1],
+            [0],
+        ]
+    );
+    
+    async function train(){
+        const configTestRun = {
+            shuffle: true,
+            epochs: 10,
+        }
+        for(let i = 0;i<600;i++){ //Runs through the data 100 time
+            const response = await neuralNetwork.fit(x,y,configTestRun); //Adding input and expected output onto the graph
+            console.log(response.history.loss[0]); //Prints out the error
+        }
+    }
+
+    //Predicting 
+    const inputs = tf.tensor2d(
+        [
+            [1,1], //Test Case #1 Expected: 0
+            [0,1], //Test Case #2 Expected: 1
+            [0,0], //Test Case #3 Expected: 0
+        ]
+    );
+    
+    train().then(()=>{
+        let result = neuralNetwork.predict(inputs);
+        result.print();
+    });
+    
 }
 
 createNeuralNetwork();

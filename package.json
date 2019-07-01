@@ -4,7 +4,7 @@
   "description": "Testing tensorflow",
   "main": "main.js",
   "scripts": {
-    "runMain": "node main.js"
+    "main": "node main.js"
   },
   "keywords": [
     "ML"
