@@ -77,7 +77,8 @@ function tensorMemory(){
 
 //_______________________________________Creating Actual Neural Network w/ Layer API___________________________________________________________
 function createNeuralNetwork(){
-    const neuralNetwork = tf.sequential(); //Creates overall neural network architecture
+    //Whole neural network
+    const neuralNetwork = tf.sequential(); //Creates overall neural network map
 
     //Layers
     const configHiddenLayer = { //Configuration for layers
@@ -90,22 +91,22 @@ function createNeuralNetwork(){
         units: 1, //# of nodes
         activation: 'sigmoid', //Type of activation function (Controls number range)
     }
-    //Dense = fully connected layer
-    const hidden = tf.layers.dense(configHiddenLayer); //Creating a layer that connects all nodes to each other
+
+    const hidden = tf.layers.dense(configHiddenLayer); //Creating a layer that connects all nodes to each other; Dense = fully connected layer
     const output = tf.layers.dense(configOutputLayer);
 
     neuralNetwork.add(hidden); //Adding hidden layer to network
     neuralNetwork.add(output);
 
     //Optimizer using gradient descent
-    const sgdOpt = tf.train.sgd(0.5); //.1 = Learning curve, the higher the number
+    const sgdOpt = tf.train.sgd(0.5); //.1 = Learning curve, the higher the number; SGD = Stochastic Gradient Descen
     const configOptimizer = {
         optimizer: sgdOpt,
         loss: tf.losses.meanSquaredError, 
     }
     neuralNetwork.compile(configOptimizer);
     
-    //Creating a history
+    //Training data set
     const x = tf.tensor2d(
         [
             [0,0], //Input cases
