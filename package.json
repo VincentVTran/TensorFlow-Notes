@@ -1,0 +1,17 @@
+{
+  "name": "tensorflow",
+  "version": "1.0.0",
+  "description": "Testing tensorflow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ML"
+  ],
+  "author": "Vincent Tran",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.2.2"
+  }
+}
